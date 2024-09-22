@@ -3,9 +3,11 @@ import os
 import yara
 from datetime import datetime
 
-files_to_scan = glob.glob("./yara_test_files/*")
-yara_rules_files = glob.glob("./yara-rules/*")
 
+# yara rules folder
+yara_rules_files = glob.glob("./yara-rules/*")
+# files folder to scan
+files_to_scan = glob.glob("./yara_test_files/*")
 
 def files_scanner():
 
@@ -19,9 +21,6 @@ def files_scanner():
         rule = yara.load(rule_path)
 
         for file_path in files_to_scan:
-
-            if ".yar" not in file_path:
-                continue
 
             is_ascii_path = is_ascii(file_path)
 
@@ -40,7 +39,7 @@ def files_scanner():
 
     print("ended scan", datetime.now())
 
-
+# write results to log
 def write_to_file(rule_path, file_path):
     if not file_path:
         with open("./my_matchs.log", 'a+', encoding='utf8') as f:
@@ -51,7 +50,7 @@ def write_to_file(rule_path, file_path):
             f.write(f" {rule_path} ${file_path} found malicious file!")
             f.write("\n")
 
-
+# To prevent ascii files error in win10 files
 def is_ascii(s):
     return all(ord(c) < 128 for c in s)
 
