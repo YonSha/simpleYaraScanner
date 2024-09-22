@@ -18,6 +18,9 @@ def files_scanner():
 
         for file_path in files_to_scan:
 
+            if ".yar" not in file_path:
+                continue
+
             is_ascii_path = is_ascii(file_path)
 
             if not is_ascii_path and os.name == 'nt':
