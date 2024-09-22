@@ -13,7 +13,7 @@ def files_scanner():
     print(f"Found {len(files_to_scan)} Files")
     print(f"Found {len(yara_rules_files)} Yaras")
     for rule_path in yara_rules_files:
-        if ".yar" not in file_path:
+        if ".yar" not in rule_path:
             continue
         found_malicious = False
         rule = yara.load(rule_path)
