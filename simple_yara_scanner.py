@@ -10,8 +10,8 @@ yara_rules_files = glob.glob("./yara-rules/*")
 def files_scanner():
 
     print("started scan", datetime.now())
-    print(f"Found {len(files_to_scan)} Files")
-    print(f"Found {len(yara_rules_files)} Yaras")
+    print(f"Found {len(files_to_scan) -1} Files")
+    print(f"Found {len(yara_rules_files) -1} Yaras")
     for rule_path in yara_rules_files:
         if ".yar" not in rule_path:
             continue
