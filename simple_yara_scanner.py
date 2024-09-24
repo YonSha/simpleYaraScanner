@@ -54,7 +54,7 @@ def files_scanner():
 def write_to_file(rule_path, file_path):
     if not file_path:
         with open("./my_matchs.log", 'a+', encoding='utf8') as f:
-            f.write(f"{datetime.now()}: {rule_path} No malicious found for rule\n")
+            f.write(f"{datetime.now()}: {rule_path} --> No malicious found for rule\n")
     else:
         with open("./my_matchs.log", 'a+', encoding='utf8') as f:
             f.write(f"{datetime.now()}: {rule_path} --> {file_path} -> found malicious file!\n")
