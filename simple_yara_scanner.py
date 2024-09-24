@@ -48,20 +48,19 @@ def write_to_file(rule_path, file_path,):
         with open("./my_matchs.log", 'a+', encoding='utf8') as f:
             f.write(f"{datetime.now()}: {rule_path} --> {file_path} -> found malicious file!\n")
 
-def split_into_six_equal_lists(big_list):
+def split_into_equal_lists(big_list):
     n = len(big_list)
     # Determine the size of each sublist
-    size = n // 6
+    size = n // 4
 
     # Create the six sublists
     list1 = big_list[:size]
     list2 = big_list[size:size*2]
     list3 = big_list[size*2:size*3]
-    list4 = big_list[size*3:size*4]
-    list5 = big_list[size*4:size*5]
-    list6 = big_list[size*5:]
+    list4 = big_list[size*3:]
 
-    return list1, list2, list3, list4, list5, list6
+
+    return list1, list2, list3, list4
 
 if __name__ == "__main__":
 
@@ -69,7 +68,7 @@ if __name__ == "__main__":
     print(f"Found {len(files_to_scan)} Files")
     print(f"Found {len(yara_rules_files)} Yaras")
 
-    chunk_one, chunk_two, chunk_three, chunk_four, chunk_five, chunk_six = split_into_six_equal_lists(files_to_scan)
+    chunk_one, chunk_two, chunk_three, chunk_four = split_into_equal_lists(files_to_scan)
     manager = multiprocessing.Manager()
     shared_list = manager.list()
     result_value = Value('i', 0)
@@ -82,17 +81,19 @@ if __name__ == "__main__":
         process2 = multiprocessing.Process(target=files_scanner, args=(chunk_two,rule_path,result_value,shared_list))
         process3 = multiprocessing.Process(target=files_scanner, args=(chunk_three,rule_path,result_value,shared_list))
         process4 = multiprocessing.Process(target=files_scanner, args=(chunk_four,rule_path,result_value,shared_list))
-        process5 = multiprocessing.Process(target=files_scanner, args=(chunk_five,rule_path,result_value,shared_list))
-        process6 = multiprocessing.Process(target=files_scanner, args=(chunk_six,rule_path,result_value,shared_list))
+
 
         # Start the processes
         process1.start()
         process2.start()
         process3.start()
+        process4.start()
+
 
         process1.join()
         process2.join()
         process3.join()
+        process4.join()
 
         if result_value.value == 0:
             write_to_file(rule_path, False)
