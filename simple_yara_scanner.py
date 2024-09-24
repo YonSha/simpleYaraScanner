@@ -2,17 +2,17 @@ import glob
 import os
 import yara
 from datetime import datetime
-import multiprocessing
-from multiprocessing import Value
-
+from multiprocessing import Value, Process, Manager, cpu_count
 
 # yara rules folder
-yara_rules_files = glob.glob("./yara-rules/*", recursive=True)
+yara_rules_files = glob.glob("./yara-rules/*.yar", recursive=True)
 # files folder to scan
 files_to_scan = glob.glob("./yara_test_files/*", recursive=True)
 
 # To prevent ascii files error in win10 files
 def is_ascii(s):
+    if not s:  # Return True for empty strings
+        return True
     return all(ord(c) < 128 for c in s)
 
 def files_scanner(file_chunk,rule_path,result_value,shared_list):
@@ -41,26 +41,28 @@ def files_scanner(file_chunk,rule_path,result_value,shared_list):
 
 # write results to log
 def write_to_file(rule_path, file_path,):
-    if not file_path:
-        with open("./my_matchs.log", 'a+', encoding='utf8') as f:
-            f.write(f"{datetime.now()}: {rule_path} --> No malicious found for rule\n")
-    else:
-        with open("./my_matchs.log", 'a+', encoding='utf8') as f:
-            f.write(f"{datetime.now()}: {rule_path} --> {file_path} -> found malicious file!\n")
+    log_message = f"{datetime.now()}: {rule_path} --> "
+    log_message += "No malicious found for rule\n" if not file_path else f"{file_path} -> found malicious file!\n"
 
-def split_into_equal_lists(big_list):
+    # Open the file once and write the message
+    with open("./my_matchs.log", 'a+', encoding='utf8') as f:
+        f.write(log_message)
+
+
+def split_into_equal_lists(big_list, num_sublists):
     n = len(big_list)
-    # Determine the size of each sublist
-    size = n // 4
+    size = n // num_sublists
+    remainder = n % num_sublists
 
-    # Create the six sublists
-    list1 = big_list[:size]
-    list2 = big_list[size:size*2]
-    list3 = big_list[size*2:size*3]
-    list4 = big_list[size*3:]
+    sublists = []
+    start = 0
 
+    for i in range(num_sublists):
+        end = start + size + (1 if i < remainder else 0)
+        sublists.append(big_list[start:end])
+        start = end
 
-    return list1, list2, list3, list4
+    return sublists
 
 if __name__ == "__main__":
 
@@ -68,37 +70,28 @@ if __name__ == "__main__":
     print(f"Found {len(files_to_scan)} Files")
     print(f"Found {len(yara_rules_files)} Yaras")
 
-    chunk_one, chunk_two, chunk_three, chunk_four = split_into_equal_lists(files_to_scan)
-    manager = multiprocessing.Manager()
-    shared_list = manager.list()
-    result_value = Value('i', 0)
 
-    for rule_path in yara_rules_files:
-        if ".yar" not in rule_path:
-            continue
-        result_value.value = 0
-        process1 = multiprocessing.Process(target=files_scanner, args=(chunk_one,rule_path,result_value,shared_list))
-        process2 = multiprocessing.Process(target=files_scanner, args=(chunk_two,rule_path,result_value,shared_list))
-        process3 = multiprocessing.Process(target=files_scanner, args=(chunk_three,rule_path,result_value,shared_list))
-        process4 = multiprocessing.Process(target=files_scanner, args=(chunk_four,rule_path,result_value,shared_list))
+    with Manager() as manager:
+        shared_list = manager.list()
+        result_value = Value('i', 0)
 
+        chunks = split_into_equal_lists(files_to_scan,4)
 
-        # Start the processes
-        process1.start()
-        process2.start()
-        process3.start()
-        process4.start()
+        for rule_path in yara_rules_files:
+            processes = []
+            result_value.value = 0
+            for chunk in chunks:
+                process = Process(target=files_scanner, args=(chunk, rule_path, result_value, shared_list))
+                processes.append(process)
+                process.start()
 
+            for process in processes:
+                process.join()
 
-        process1.join()
-        process2.join()
-        process3.join()
-        process4.join()
-
-        if result_value.value == 0:
-            write_to_file(rule_path, False)
-        else:
-            write_to_file(rule_path, shared_list[0])
-            shared_list.pop()
+            if result_value.value == 0:
+                write_to_file(rule_path, False)
+            else:
+                write_to_file(rule_path, shared_list[0])
+                shared_list.pop()
 
     print("ended scan", datetime.now())
