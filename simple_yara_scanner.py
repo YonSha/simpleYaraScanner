@@ -45,11 +45,11 @@ def files_scanner():
 def write_to_file(rule_path, file_path):
     if not file_path:
         with open("./my_matchs.log", 'a+', encoding='utf8') as f:
-            f.write(f"{datetime.now()}: {rule_path} No malicious found for rule")
+            f.write(f"{datetime.now()}: {rule_path} --> No malicious found for rule")
             f.write("\n")
     else:
         with open("./my_matchs.log", 'a+', encoding='utf8') as f:
-            f.write(f"{datetime.now()}: {rule_path} ${file_path} found malicious file!")
+            f.write(f"{datetime.now()}: {rule_path} --> {file_path} -> found malicious file!")
             f.write("\n")
 
 # To prevent ascii files error in win10 files
