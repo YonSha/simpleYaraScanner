@@ -5,9 +5,9 @@ from datetime import datetime
 
 
 # yara rules folder
-yara_rules_files = glob.glob("./yara-rules/*")
+yara_rules_files = glob.glob("./yara-rules/*", recursive=True)
 # files folder to scan
-files_to_scan = glob.glob("./yara_test_files/*")
+files_to_scan = glob.glob("./yara_test_files/*", recursive=True)
 
 
 # To prevent ascii files error in win10 files
