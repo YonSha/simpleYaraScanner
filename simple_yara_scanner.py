@@ -1,13 +1,22 @@
 import glob
 import os
+import sys
+import time
+
 import yara
 from datetime import datetime
+from multiprocessing import Process, Value
 
 
 # yara rules folder
 yara_rules_files = glob.glob("./yara-rules/*")
 # files folder to scan
 files_to_scan = glob.glob("./yara_test_files/*")
+
+
+# To prevent ascii files error in win10 files
+def is_ascii(s):
+    return all(ord(c) < 128 for c in s)
 
 def files_scanner():
 
@@ -18,7 +27,11 @@ def files_scanner():
         if ".yar" not in rule_path:
             continue
         found_malicious = False
-        rule = yara.load(rule_path)
+
+        try:
+            rule = yara.compile(rule_path)
+        except:
+            rule = yara.load(rule_path)
 
         for file_path in files_to_scan:
 
@@ -38,23 +51,18 @@ def files_scanner():
             write_to_file(rule_path, False)
         else:
             continue
-
     print("ended scan", datetime.now())
 
 # write results to log
 def write_to_file(rule_path, file_path):
     if not file_path:
         with open("./my_matchs.log", 'a+', encoding='utf8') as f:
-            f.write(f"{datetime.now()}: {rule_path} No malicious found for rule")
+            f.write(f"{datetime.now()}: {rule_path} --> No malicious found for rule")
             f.write("\n")
     else:
         with open("./my_matchs.log", 'a+', encoding='utf8') as f:
-            f.write(f"{datetime.now()}: {rule_path} ${file_path} found malicious file!")
+            f.write(f"{datetime.now()}: {rule_path} --> {file_path} ->  found malicious file!")
             f.write("\n")
-
-# To prevent ascii files error in win10 files
-def is_ascii(s):
-    return all(ord(c) < 128 for c in s)
 
 
 
