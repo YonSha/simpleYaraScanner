@@ -74,7 +74,7 @@ if __name__ == "__main__":
         shared_list = manager.list()
         result_value = Value('i', 0)
 
-        chunks = split_into_equal_lists(files_to_scan,8)
+        chunks = split_into_equal_lists(files_to_scan,24)
 
         for rule_path in yara_rules_files:
             processes = []
