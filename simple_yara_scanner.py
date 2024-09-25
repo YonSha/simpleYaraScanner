@@ -70,28 +70,32 @@ if __name__ == "__main__":
     print(f"Found {len(files_to_scan)} Files")
     print(f"Found {len(yara_rules_files)} Yaras")
 
-
     with Manager() as manager:
         shared_list = manager.list()
         result_value = Value('i', 0)
 
-        chunks = split_into_equal_lists(files_to_scan,4)
+        chunks = split_into_equal_lists(files_to_scan,8)
 
         for rule_path in yara_rules_files:
             processes = []
             result_value.value = 0
-            for chunk in chunks:
-                process = Process(target=files_scanner, args=(chunk, rule_path, result_value, shared_list))
-                processes.append(process)
-                process.start()
 
-            for process in processes:
-                process.join()
+            try:
+                for chunk in chunks:
+                    process = Process(target=files_scanner, args=(chunk, rule_path, result_value, shared_list))
+                    processes.append(process)
+                    process.start()
 
-            if result_value.value == 0:
-                write_to_file(rule_path, False)
-            else:
-                write_to_file(rule_path, shared_list[0])
-                shared_list.pop()
+                for process in processes:
+                    process.join()
+
+                if result_value.value == 0:
+                    write_to_file(rule_path, False)
+                else:
+                    write_to_file(rule_path, shared_list[0])
+                    shared_list.pop()
+            finally:
+                for process in processes:
+                    process.terminate()
 
     print("ended scan", datetime.now())
