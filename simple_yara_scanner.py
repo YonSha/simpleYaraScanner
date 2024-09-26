@@ -1,13 +1,20 @@
 import glob
+import logging
 import os
+import time
+
+
 import yara
 from datetime import datetime
-from multiprocessing import Value, Process, Manager, cpu_count
+from multiprocessing import Value, Process, Manager
+from conf.config import Config
 
 # yara rules folder
 yara_rules_files = glob.glob("./yara-rules/*.yar", recursive=True)
 # files folder to scan
 files_to_scan = glob.glob("./yara_test_files/*", recursive=True)
+
+config = Config("../simpleScanner/conf/configuration.json")
 
 # To prevent ascii files error in win10 files
 def is_ascii(s):
@@ -48,7 +55,6 @@ def write_to_file(rule_path, file_path,):
     with open("./my_matchs.log", 'a+', encoding='utf8') as f:
         f.write(log_message)
 
-
 def split_into_equal_lists(big_list, num_sublists):
     n = len(big_list)
     size = n // num_sublists
@@ -64,17 +70,17 @@ def split_into_equal_lists(big_list, num_sublists):
 
     return sublists
 
-if __name__ == "__main__":
 
-    print("started scan", datetime.now())
-    print(f"Found {len(files_to_scan)} Files")
-    print(f"Found {len(yara_rules_files)} Yaras")
-
+def run():
+    start_time = time.time()
+    logging.info("started scan")
+    logging.info(f"Found {len(files_to_scan)} Files")
+    logging.info(f"Found {len(yara_rules_files)} Yaras")
     with Manager() as manager:
         shared_list = manager.list()
         result_value = Value('i', 0)
 
-        chunks = split_into_equal_lists(files_to_scan,24)
+        chunks = split_into_equal_lists(files_to_scan, config.maximum_processes)
 
         for rule_path in yara_rules_files:
             processes = []
@@ -98,4 +104,8 @@ if __name__ == "__main__":
                 for process in processes:
                     process.terminate()
 
-    print("ended scan", datetime.now())
+        logging.info("Calculated Run Time: "+ str(time.time() - start_time))
+
+    logging.info("ended scan")
+if __name__ == "__main__":
+   run()
