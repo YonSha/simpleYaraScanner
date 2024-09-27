@@ -12,7 +12,7 @@ yara_rules_files = glob.glob("./yara-rules/*.yar", recursive=True)
 # files folder to scan
 files_to_scan = glob.glob("./yara_test_files/*", recursive=True)
 # Configuration file
-config = Config("../simpleScanner/conf/configuration.json")
+config = Config("conf/configuration.json")
 
 # To prevent ascii files error in win10 files
 def is_ascii(s):

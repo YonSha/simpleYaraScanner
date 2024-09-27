@@ -2,3 +2,40 @@
 Log file for file/yara rule results
 ----------------------=======================================----------------------
 
+2024-09-26 17:30:10.949978: ./yara-rules\bye.yar --> ./yara_test_files\copy100.txt -> found malicious file!
+2024-09-26 17:30:15.163860: ./yara-rules\hey.yar --> ./yara_test_files\copy100.txt -> found malicious file!
+2024-09-26 17:30:19.771905: ./yara-rules\rule.yar --> ./yara_test_files\copy100.txt -> found malicious file!
+2024-09-26 17:30:24.631602: ./yara-rules\rule_2.yar --> ./yara_test_files\copy100.txt -> found malicious file!
+2024-09-26 17:30:46.955787: ./yara-rules\__028_beta__shoooo_.yar --> No malicious found for rule
+2024-09-26 17:32:15.330020: ./yara-rules\bye.yar --> ./yara_test_files\copy12.txt -> found malicious file!
+2024-09-26 17:32:22.238503: ./yara-rules\hey.yar --> ./yara_test_files\copy13.txt -> found malicious file!
+2024-09-26 17:35:04.267524: ./yara-rules\bye.yar --> ./yara_test_files\copy100.txt -> found malicious file!
+2024-09-26 17:35:09.093188: ./yara-rules\hey.yar --> ./yara_test_files\copy100.txt -> found malicious file!
+2024-09-26 17:35:13.313400: ./yara-rules\rule.yar --> ./yara_test_files\copy100.txt -> found malicious file!
+2024-09-26 17:35:17.355396: ./yara-rules\rule_2.yar --> ./yara_test_files\copy100.txt -> found malicious file!
+2024-09-26 17:37:40.141947: ./yara-rules\bye.yar --> ./yara_test_files\copy12.txt -> found malicious file!
+2024-09-26 17:37:45.645452: ./yara-rules\hey.yar --> ./yara_test_files\copy13.txt -> found malicious file!
+2024-09-26 17:38:09.994685: ./yara-rules\rule.yar --> No malicious found for rule
+2024-09-26 17:38:33.390886: ./yara-rules\rule_2.yar --> No malicious found for rule
+2024-09-26 17:38:56.881217: ./yara-rules\__028_beta__shoooo_.yar --> No malicious found for rule
+2024-09-26 17:39:16.236059: ./yara-rules\bye.yar --> ./yara_test_files\copy12.txt -> found malicious file!
+2024-09-26 17:39:21.865339: ./yara-rules\hey.yar --> ./yara_test_files\copy13.txt -> found malicious file!
+2024-09-26 17:39:50.660296: ./yara-rules\rule.yar --> No malicious found for rule
+2024-09-26 17:40:17.748615: ./yara-rules\rule_2.yar --> No malicious found for rule
+2024-09-26 17:40:45.071096: ./yara-rules\__028_beta__shoooo_.yar --> No malicious found for rule
+2024-09-26 17:41:08.255898: ./yara-rules\bye.yar --> ./yara_test_files\copy12.txt -> found malicious file!
+2024-09-26 17:41:12.873734: ./yara-rules\hey.yar --> ./yara_test_files\copy13.txt -> found malicious file!
+2024-09-26 17:41:40.108321: ./yara-rules\rule.yar --> No malicious found for rule
+2024-09-26 17:42:09.545356: ./yara-rules\rule_2.yar --> No malicious found for rule
+2024-09-26 17:42:38.265818: ./yara-rules\__028_beta__shoooo_.yar --> No malicious found for rule
+2024-09-26 17:42:58.814713: ./yara-rules\bye.yar --> ./yara_test_files\copy12.txt -> found malicious file!
+2024-09-26 17:43:04.437068: ./yara-rules\hey.yar --> ./yara_test_files\copy13.txt -> found malicious file!
+2024-09-26 17:43:33.404013: ./yara-rules\rule.yar --> No malicious found for rule
+2024-09-26 17:44:04.858075: ./yara-rules\rule_2.yar --> No malicious found for rule
+2024-09-26 17:44:32.043279: ./yara-rules\__028_beta__shoooo_.yar --> No malicious found for rule
+2024-09-26 17:44:42.613851: ./yara-rules\bye.yar --> ./yara_test_files\copy12.txt -> found malicious file!
+2024-09-26 17:44:47.663703: ./yara-rules\hey.yar --> ./yara_test_files\copy13.txt -> found malicious file!
+2024-09-26 17:45:16.319373: ./yara-rules\rule.yar --> No malicious found for rule
+2024-09-26 17:46:02.304261: ./yara-rules\rule_2.yar --> No malicious found for rule
+2024-09-26 17:46:35.874962: ./yara-rules\__028_beta__shoooo_.yar --> No malicious found for rule
+2024-09-27 18:25:08.798494: ./yara-rules\example_yara.yar --> No malicious found for rule
